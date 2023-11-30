@@ -34,17 +34,24 @@ func main() {
 
 	// If no args, skip exe
 	if len(os.Args) < 2 {
-		pterm.Debug.Println("Looking in current directory...")
 		dir, _ := os.Getwd()
 		// Find *.sr.[json,yaml] in current directory
 		files = utils.FindConfigFile(dir)
 	}
 
 	if *configPath != "" {
-		pterm.Debug.Println("Looking in user defined directory...")
 		// Find *.sr.[json,yaml] in given directory(s)
 		files = utils.FindConfigFile(*configPath)
 	}
 
-	pterm.Info.Println("Attempting to run requests found in:", files)
+	var fileList []string
+	for _, file := range files {
+		fileList = append(fileList, utils.GetFile(file))
+	}
+
+	pterm.Info.Println("Attempting to run requests found in:\n\t", utils.BuildFileList(fileList))
+
+	for _, file := range files {
+		utils.ParseConfig(file)
+	}
 }

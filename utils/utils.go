@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"regexp"
+	"strings"
 
 	"github.com/pterm/pterm"
 )
@@ -42,7 +43,8 @@ func FindConfigFile(dir string) []string {
 
 	// get only filenames
 	for _, file := range files {
-		filenames = append(filenames, file.Name())
+		// TODO: Base dir file sep on OS
+		filenames = append(filenames, dir+"\\"+file.Name())
 	}
 
 	return getFilePath(filenames)
@@ -61,4 +63,28 @@ func getFilePath(files []string) []string {
 	}
 
 	return found
+}
+
+// BuildFileList creates an easily readable list of found request config files
+func BuildFileList(files []string) string {
+	var str string
+	listLen := len(files) - 1
+
+	for i, file := range files {
+		if i == listLen {
+			str += file
+		} else {
+			str += file + ", "
+		}
+	}
+
+	return str
+}
+
+// GetFile returns only the given directories *.sr.[json,yaml] file
+func GetFile(dir string) string {
+	// TODO: Base dir file sep on OS
+	dirArr := strings.Split(dir, "\\")
+
+	return dirArr[len(dirArr)-1]
 }
