@@ -12,21 +12,24 @@ import (
 var (
 	configPath   *string
 	excludeFiles *string
+	debug        *bool
 	files        []string
 )
 
 func init() {
-	pterm.EnableDebugMessages()
-
 	// get program arguments
 	configPath = flag.String("config", "", "Path to your request config directory. Can be relative or absolute path.")
 	excludeFiles = flag.String("exclude", "", "Filenames from given/config directory to exclude. Regex supported.")
+	debug = flag.Bool("debug", true, "Whether to show debug log messages.")
 
 	flag.Parse()
+
+	if *debug {
+		pterm.EnableDebugMessages()
+	}
 }
 
 func main() {
-
 	pterm.Debug.Println(flag.CommandLine.Args())
 
 	// If no args, skip exe
