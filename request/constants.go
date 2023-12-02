@@ -1,15 +1,12 @@
 package request
 
-// Method is the request method type
-type Method int
-
 const (
 	// GET is a GET request
-	GET Method = iota
+	GET = "GET"
 	// PUT is a PUT request
-	PUT
+	PUT = "PUT"
 	// POST is a POST request
-	POST
+	POST = "POST"
 	// DELETE is a DELETE request
-	DELETE
+	DELETE = "DELETE"
 )
