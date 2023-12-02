@@ -9,12 +9,15 @@ import (
 	"github.com/pterm/pterm"
 )
 
-// JSONRequests is the structure of the json request configs
+// JSONRequests is the structure of the json request configs.
 type JSONRequests struct {
-	Requests []request `json:"request"`
+	// Requests - The array of requests
+	Requests []request `json:"requests"`
 }
 
 type request struct {
+	// Name - A requests name
+	Name string `json:"name"`
 	// ULR - Request endpoint
 	URL string `json:"url"`
 	// Method - Request method
@@ -40,11 +43,17 @@ func parseJSONConfig(file string) {
 	defer jsonFile.Close()
 
 	// read json as a byte array.
-	byteArr, _ := io.ReadAll(jsonFile)
+	byteArr, err := io.ReadAll(jsonFile)
+	if err != nil {
+		pterm.Error.Println("JSON file read error:", err)
+	}
 
 	var requests JSONRequests
 
-	json.Unmarshal(byteArr, &requests)
+	err = json.Unmarshal(byteArr, &requests)
+	if err != nil {
+		pterm.Error.Println("JSON unmarshal error:", err)
+	}
 
 	pterm.Info.Println(requests)
 }

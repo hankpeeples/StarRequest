@@ -1,4 +1,5 @@
 {
-  "url": "http://example.com",
-  "method": "GET"
+  "requests": [
+    { "name": "Example Request", "url": "http://example.com", "method": "GET" }
+  ]
 }
