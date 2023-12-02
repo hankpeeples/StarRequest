@@ -4,6 +4,7 @@ package main
 import (
 	"flag"
 	"os"
+	"star-request/request"
 	"star-request/utils"
 
 	"github.com/pterm/pterm"
@@ -13,24 +14,29 @@ var (
 	configPath   *string
 	excludeFiles *string
 	debug        *bool
+	recursive    *bool
 	files        []string
 )
 
 func init() {
 	// get program arguments
 	configPath = flag.String("config", "", "Path to your request config directory. Can be relative or absolute path.")
-	excludeFiles = flag.String("exclude", "", "Filenames from given/config directory to exclude. Regex supported.")
-	debug = flag.Bool("debug", true, "Whether to show debug log messages.")
+	excludeFiles = flag.String("exclude", "", "(Not Implemented!) Filenames from given/config directory to exclude. Regex supported.")
+	debug = flag.Bool("debug", false, "Whether to show debug log messages.")
+	recursive = flag.Bool("recursive", false, "(Not Implemented!) Whether to look in all sub directories of given path.")
 
 	flag.Parse()
-
-	if *debug {
-		pterm.EnableDebugMessages()
-	}
 }
 
 func main() {
-	pterm.Debug.Println(flag.CommandLine.Args())
+	if *debug {
+		pterm.EnableDebugMessages()
+	}
+
+	pterm.Debug.Println("configPath:", *configPath)
+	pterm.Debug.Println("excludeFiles:", *excludeFiles)
+	pterm.Debug.Println("debug:", *debug)
+	pterm.Debug.Println("recursive:", *recursive)
 
 	// If no args, skip exe
 	if len(os.Args) < 2 {
@@ -52,6 +58,6 @@ func main() {
 	pterm.Info.Println("Attempting to run requests found in:\n\t", utils.BuildFileList(fileList))
 
 	for _, file := range files {
-		utils.ParseConfig(file)
+		request.BuildRequest(utils.ParseConfig(file))
 	}
 }

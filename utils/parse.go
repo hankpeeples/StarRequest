@@ -25,14 +25,16 @@ type request struct {
 }
 
 // ParseConfig reads the request config file(s)
-func ParseConfig(file string) {
+func ParseConfig(file string) JSONRequests {
+	var requests JSONRequests
 	splitFile := strings.Split(file, ".")
 	if splitFile[len(splitFile)-1] == "json" {
-		parseJSONConfig(file)
+		requests = parseJSONConfig(file)
 	}
+	return requests
 }
 
-func parseJSONConfig(file string) {
+func parseJSONConfig(file string) JSONRequests {
 	pterm.Debug.Println("Parsing JSON config file:", file)
 
 	jsonFile, err := os.Open(file)
@@ -55,5 +57,5 @@ func parseJSONConfig(file string) {
 		pterm.Error.Println("JSON unmarshal error:", err)
 	}
 
-	pterm.Info.Println(requests)
+	return requests
 }
