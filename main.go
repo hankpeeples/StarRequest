@@ -22,7 +22,7 @@ func init() {
 	// get program arguments
 	configPath = flag.String("config", "", "Path to your request config directory. Can be relative or absolute path.")
 	excludeFiles = flag.String("exclude", "", "(Not Implemented!) Filenames from given/config directory to exclude. Regex supported.")
-	debug = flag.Bool("debug", false, "Whether to show debug log messages.")
+	debug = flag.Bool("debug", true, "Whether to show debug log messages.")
 	recursive = flag.Bool("recursive", false, "(Not Implemented!) Whether to look in all sub directories of given path.")
 
 	flag.Parse()

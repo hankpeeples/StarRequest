@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"regexp"
+	"runtime"
 	"strings"
 
 	"github.com/pterm/pterm"
@@ -83,8 +84,13 @@ func BuildFileList(files []string) string {
 
 // GetFile returns only the given directories *.sr.[json,yaml] file
 func GetFile(dir string) string {
-	// TODO: Base dir file sep on OS
-	dirArr := strings.Split(dir, "\\")
+	var dirArr []string
+
+	if runtime.GOOS == "windows" {
+		dirArr = strings.Split(dir, "\\")
+	} else {
+		dirArr = strings.Split(dir, "/")
+	}
 
 	return dirArr[len(dirArr)-1]
 }
