@@ -12,10 +12,11 @@ import (
 // JSONRequests is the structure of the json request configs.
 type JSONRequests struct {
 	// Requests - The array of requests
-	Requests []request `json:"requests"`
+	Requests []Request `json:"requests"`
 }
 
-type request struct {
+// Request defines a single request
+type Request struct {
 	// Name - A requests name
 	Name string `json:"name"`
 	// ULR - Request endpoint

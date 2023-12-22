@@ -58,6 +58,6 @@ func main() {
 	pterm.Info.Println("Attempting to run requests found in:\n\t", utils.BuildFileList(fileList))
 
 	for _, file := range files {
-		request.BuildRequest(utils.ParseConfig(file))
+		request.SendRequest(utils.ParseConfig(file))
 	}
 }

@@ -1,5 +1,9 @@
 {
   "requests": [
-    { "name": "Example Request", "url": "http://example.com", "method": "GET" }
+    {
+      "name": "Example Request",
+      "url": "https://dog-facts-api.herokuapp.com/api/v1/resources/dogs?number=2",
+      "method": "GET"
+    }
   ]
 }
