@@ -2,10 +2,11 @@
 package request
 
 import (
+	"fmt"
 	"io"
 	"net/http"
-	"os"
 	"star-request/utils"
+	"time"
 
 	"github.com/pterm/pterm"
 )
@@ -41,27 +42,40 @@ func buildRequest(req utils.Request) {
 func sendGetRequest(req utils.Request) {
 	pterm.Debug.Println("Running GET request")
 
-	res, err := http.Get(req.URL)
+	request, err := http.NewRequest(http.MethodGet, req.URL, nil)
 	if err != nil {
 		pterm.Error.Println(err)
 	}
 
-	if !checkStatusCode(res.StatusCode, res.Status) {
-		os.Exit(1)
-	}
+	request.Header.Add("Content-Type", "application/json")
 
-	body, err := io.ReadAll(res.Body)
+	client := &http.Client{Timeout: 10 * time.Second}
+
+	resp, err := client.Do(request)
 	if err != nil {
 		pterm.Error.Println(err)
 	}
 
-	pterm.Info.Printf("Status Code: %s ~ Data: %v\n", res.Status, body)
+	body := getRequestData(resp)
+
+	fmt.Println(body)
 }
 
-func checkStatusCode(statusCode int, status string) bool {
-	if statusCode != 200 {
-		pterm.Warning.Printf("Bad request ... Status: %s\n", status)
-		return false
+func checkStatusCode(statusCode int, status string) {
+	if statusCode == 404 {
+		pterm.Error.Printf("Bad request ... Returned with status: %s\n", status)
+	} else if statusCode != 200 || statusCode == 201 {
+		pterm.Warning.Printf("Returned with status: %s\n", status)
 	}
-	return true
+}
+
+func getRequestData(resp *http.Response) string {
+	checkStatusCode(resp.StatusCode, resp.Status)
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		pterm.Error.Println(err)
+	}
+
+	return string(body)
 }
