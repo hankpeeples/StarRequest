@@ -4,6 +4,7 @@ package main
 import (
 	"flag"
 	"os"
+
 	"star-request/request"
 	"star-request/utils"
 
@@ -26,17 +27,16 @@ func init() {
 	recursive = flag.Bool("recursive", false, "(Not Implemented!) Whether to look in all sub directories of given path.")
 
 	flag.Parse()
+	utils.CreateLogger(*debug)
 }
 
 func main() {
-	if *debug {
-		pterm.EnableDebugMessages()
-	}
+	log := utils.GetLogger()
 
-	pterm.Debug.Println("configPath:", *configPath)
-	pterm.Debug.Println("excludeFiles:", *excludeFiles)
-	pterm.Debug.Println("debug:", *debug)
-	pterm.Debug.Println("recursive:", *recursive)
+	log.Debug().Msgf("configPath: %s", *configPath)
+	log.Debug().Msgf("excludeFiles: %s", *excludeFiles)
+	log.Debug().Msgf("debug: %v", *debug)
+	log.Debug().Msgf("recursive: %v", *recursive)
 
 	// If no args, skip exe
 	if len(os.Args) < 2 {
@@ -55,7 +55,8 @@ func main() {
 		fileList = append(fileList, utils.GetFile(file))
 	}
 
-	pterm.Info.Println("Attempting to run requests found in:\n\t", utils.BuildFileList(fileList))
+	log.Info().Msgf("Attempting to run requests found in: %v", utils.BuildFileList(fileList))
+	pterm.Info.Println("Attempting to run requests found in: \n\t", utils.BuildFileList(fileList))
 
 	for _, file := range files {
 		request.SendRequest(utils.ParseConfig(file))

@@ -7,9 +7,47 @@ import (
 	"regexp"
 	"runtime"
 	"strings"
+	"time"
 
 	"github.com/pterm/pterm"
+	"github.com/rs/zerolog"
 )
+
+var SEP string
+
+type Log struct {
+	zerolog.Logger
+}
+
+var l *Log
+
+func CreateLogger(debug bool) {
+	var level zerolog.Level
+	level = zerolog.ErrorLevel
+	if debug {
+		level = zerolog.DebugLevel
+	}
+
+	// fileLogger := zerolog.New(zerolog.{Out: os.Stdout, TimeFormat: time.RFC1123}).
+	// 	Level(level).
+	// 	With().
+	// 	Timestamp().
+	// 	Caller().
+	// 	Logger()
+
+	logger := zerolog.New(zerolog.ConsoleWriter{Out: os.Stdout, TimeFormat: time.RFC1123}).
+		Level(level).
+		With().
+		Timestamp().
+		Caller().
+		Logger()
+
+	l = &Log{logger}
+}
+
+func GetLogger() *Log {
+	return l
+}
 
 // unknownArgs show the unknown args error message
 func unknownArgs(args []string, index int) {
@@ -25,7 +63,13 @@ func unknownArgs(args []string, index int) {
 // FindConfigFile finds all request configs in the given directory, Either the current
 // dir or a config file/files via given args.
 func FindConfigFile(dir string) []string {
-	filenames := []string{}
+	if runtime.GOOS == "windows" {
+		SEP = "\\"
+	} else {
+		SEP = "/"
+	}
+
+	var filenames []string
 	pterm.Debug.Printf("Looking for config file in '%s'\n", dir)
 
 	// open directory for reading
@@ -44,8 +88,7 @@ func FindConfigFile(dir string) []string {
 
 	// get only filenames
 	for _, file := range files {
-		// TODO: Base dir file sep on OS
-		filenames = append(filenames, dir+"\\"+file.Name())
+		filenames = append(filenames, dir+SEP+file.Name())
 	}
 
 	return getFilePath(filenames)
@@ -53,7 +96,7 @@ func FindConfigFile(dir string) []string {
 
 // getFilePath matches correct filenames
 func getFilePath(files []string) []string {
-	found := []string{}
+	var found []string
 
 	// find which filenames are valid config files
 	for _, file := range files {
@@ -86,11 +129,7 @@ func BuildFileList(files []string) string {
 func GetFile(dir string) string {
 	var dirArr []string
 
-	if runtime.GOOS == "windows" {
-		dirArr = strings.Split(dir, "\\")
-	} else {
-		dirArr = strings.Split(dir, "/")
-	}
+	dirArr = strings.Split(dir, SEP)
 
 	return dirArr[len(dirArr)-1]
 }

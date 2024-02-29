@@ -5,8 +5,9 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"star-request/utils"
 	"time"
+
+	"star-request/utils"
 
 	"github.com/pterm/pterm"
 )
@@ -64,7 +65,7 @@ func sendGetRequest(req utils.Request) {
 func checkStatusCode(statusCode int, status string) {
 	if statusCode == 404 {
 		pterm.Error.Printf("Bad request ... Returned with status: %s\n", status)
-	} else if statusCode != 200 || statusCode == 201 {
+	} else if statusCode != 200 {
 		pterm.Warning.Printf("Returned with status: %s\n", status)
 	}
 }
