@@ -7,40 +7,41 @@ import (
 	"regexp"
 	"runtime"
 	"strings"
-	"time"
 
+	"github.com/kpango/glg"
 	"github.com/pterm/pterm"
-	"github.com/rs/zerolog"
 )
 
 var SEP string
 
 type Log struct {
-	zerolog.Logger
+	*glg.Glg
 }
 
 var l *Log
 
 func CreateLogger(debug bool) {
-	var level zerolog.Level
-	level = zerolog.ErrorLevel
+	var level glg.LEVEL
+	level = glg.TagStringToLevel("error")
 	if debug {
-		level = zerolog.DebugLevel
+		level = glg.TagStringToLevel("debug")
 	}
 
-	// fileLogger := zerolog.New(zerolog.{Out: os.Stdout, TimeFormat: time.RFC1123}).
-	// 	Level(level).
-	// 	With().
-	// 	Timestamp().
-	// 	Caller().
-	// 	Logger()
-
-	logger := zerolog.New(zerolog.ConsoleWriter{Out: os.Stdout, TimeFormat: time.RFC1123}).
-		Level(level).
-		With().
-		Timestamp().
-		Caller().
-		Logger()
+	// Initialize logger to print to terminal and log file
+	logFile := glg.FileWriter("./sr.log", 0666)
+	logger := glg.Get().SetMode(glg.BOTH).SetLineTraceMode(glg.TraceLineShort).
+		InitWriter().
+		AddWriter(logFile).
+		SetWriter(logFile).
+		AddLevelWriter(glg.LOG, logFile).
+		AddLevelWriter(glg.INFO, logFile).
+		AddLevelWriter(glg.WARN, logFile).
+		AddLevelWriter(glg.ERR, logFile).
+		SetLevelWriter(glg.LOG, logFile).
+		SetLevelWriter(glg.INFO, logFile).
+		SetLevelWriter(glg.WARN, logFile).
+		SetLevelWriter(glg.ERR, logFile).
+		SetLevel(level)
 
 	l = &Log{logger}
 }

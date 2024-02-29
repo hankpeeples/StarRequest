@@ -33,10 +33,10 @@ func init() {
 func main() {
 	log := utils.GetLogger()
 
-	log.Debug().Msgf("configPath: %s", *configPath)
-	log.Debug().Msgf("excludeFiles: %s", *excludeFiles)
-	log.Debug().Msgf("debug: %v", *debug)
-	log.Debug().Msgf("recursive: %v", *recursive)
+	log.Debugf("configPath: %s", *configPath)
+	log.Debugf("excludeFiles: %s", *excludeFiles)
+	log.Debugf("debug: %v", *debug)
+	log.Debugf("recursive: %v", *recursive)
 
 	// If no args, skip exe
 	if len(os.Args) < 2 {
@@ -55,7 +55,7 @@ func main() {
 		fileList = append(fileList, utils.GetFile(file))
 	}
 
-	log.Info().Msgf("Attempting to run requests found in: %v", utils.BuildFileList(fileList))
+	log.Infof("Attempting to run requests found in: %v", utils.BuildFileList(fileList))
 	pterm.Info.Println("Attempting to run requests found in: \n\t", utils.BuildFileList(fileList))
 
 	for _, file := range files {
