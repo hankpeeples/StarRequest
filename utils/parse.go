@@ -24,6 +24,8 @@ type Request struct {
 	URL string `json:"url"`
 	// Method - Request method
 	Method string `json:"method"`
+	// ContentType - Request conetent type
+	ContentType string `json:"content-type"`
 }
 
 // ParseConfig reads the request config file(s)
@@ -37,7 +39,8 @@ func ParseConfig(file string) JSONRequests {
 }
 
 func parseJSONConfig(file string) JSONRequests {
-	pterm.Debug.Println("Parsing JSON config file:", file)
+	log := GetLogger()
+	log.Infof("Parsing JSON config file: %v", file)
 
 	jsonFile, err := os.Open(file)
 	if err != nil {
@@ -49,14 +52,24 @@ func parseJSONConfig(file string) JSONRequests {
 	// read json as a byte array.
 	byteArr, err := io.ReadAll(jsonFile)
 	if err != nil {
-		pterm.Error.Println("JSON file read error:", err)
+		log.Fatal("JSON file read error: %v", err)
 	}
 
 	var requests JSONRequests
 
 	err = json.Unmarshal(byteArr, &requests)
 	if err != nil {
-		pterm.Error.Println("JSON unmarshal error:", err)
+		log.Fatal("JSON unmarshal error:", err)
+	}
+
+	for n, req := range requests.Requests {
+		if req.Name == "" {
+			log.Warnf("Request #%d has no name..", n+1)
+			requests.Requests[n].Name = "N/A"
+		}
+		if req.URL == "" {
+			log.Fatalf("Required field 'URL' not found on request '%s'\n", req.Name)
+		}
 	}
 
 	return requests
