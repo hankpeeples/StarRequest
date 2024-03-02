@@ -1,9 +1,10 @@
 {
   "requests": [
     {
-      "name": "Example Request",
-      "url": "https://dog-facts-api.herokuapp.com/api/v1/resources/dogs?number=2",
-      "method": "GET"
+      "name": "Random Request",
+      "url": "https://swapi.dev/api/people/1/",
+      "method": "GET",
+      "content-type": "Application/json"
     }
   ]
 }
