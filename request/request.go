@@ -2,11 +2,11 @@
 package request
 
 import (
-	"fmt"
 	"io"
 	"net/http"
 	"time"
 
+	jsonformatter "star-request/jsonFormatter"
 	"star-request/utils"
 
 	"github.com/pterm/pterm"
@@ -59,7 +59,7 @@ func sendGetRequest(req utils.Request) {
 
 	body := getRequestData(resp)
 
-	fmt.Println(body)
+	jsonformatter.Format(body)
 }
 
 func checkStatusCode(statusCode int, status string) {
@@ -70,7 +70,7 @@ func checkStatusCode(statusCode int, status string) {
 	}
 }
 
-func getRequestData(resp *http.Response) string {
+func getRequestData(resp *http.Response) []byte {
 	checkStatusCode(resp.StatusCode, resp.Status)
 
 	body, err := io.ReadAll(resp.Body)
@@ -78,5 +78,5 @@ func getRequestData(resp *http.Response) string {
 		pterm.Error.Println(err)
 	}
 
-	return string(body)
+	return body
 }
