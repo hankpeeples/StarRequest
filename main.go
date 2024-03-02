@@ -7,8 +7,6 @@ import (
 
 	"star-request/request"
 	"star-request/utils"
-
-	"github.com/pterm/pterm"
 )
 
 var (
@@ -56,7 +54,7 @@ func main() {
 	}
 
 	log.Infof("Attempting to run requests found in: %v", utils.BuildFileList(fileList))
-	pterm.Info.Println("Attempting to run requests found in: \n\t", utils.BuildFileList(fileList))
+	// pterm.Info.Println("Attempting to run requests found in: \n\t", utils.BuildFileList(fileList))
 
 	for _, file := range files {
 		request.SendRequest(utils.ParseConfig(file))
