@@ -3,6 +3,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"os"
 
 	"star-request/request"
@@ -59,4 +60,6 @@ func main() {
 	for _, file := range files {
 		request.SendRequest(utils.ParseConfig(file))
 	}
+
+	fmt.Println("\n----------------------------------------------------\n")
 }

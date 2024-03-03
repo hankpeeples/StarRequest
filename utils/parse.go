@@ -40,7 +40,7 @@ func ParseConfig(file string) JSONRequests {
 
 func parseJSONConfig(file string) JSONRequests {
 	log := GetLogger()
-	log.Infof("Parsing JSON config file: %v", file)
+	log.Debugf("Parsing JSON config file: %v", file)
 
 	jsonFile, err := os.Open(file)
 	if err != nil {
