@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"time"
 
-	jsonformatter "star-request/jsonFormatter"
+	"star-request/jsonhelpers"
 	"star-request/utils"
 
 	"github.com/pterm/pterm"
@@ -14,8 +14,10 @@ import (
 
 // SendRequest creates the base request parsed from the file
 func SendRequest(requests utils.JSONRequests) {
+	log := utils.GetLogger()
 	for _, req := range requests.Requests {
-		pterm.Info.Printf("Name: %s ~ %s request to %s\n", req.Name, req.Method, req.URL)
+		log.Infof("Running: name: %s ~ %s request to %s ...", req.Name, req.Method, req.URL)
+		// pterm.Info.Printf("Name: %s ~ %s request to %s\n", req.Name, req.Method, req.URL)
 		buildRequest(req)
 	}
 }
@@ -59,7 +61,7 @@ func sendGetRequest(req utils.Request) {
 
 	body := getRequestData(resp)
 
-	jsonformatter.Format(body)
+	jsonhelpers.Format(body)
 }
 
 func checkStatusCode(statusCode int, status string) {
